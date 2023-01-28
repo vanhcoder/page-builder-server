@@ -7,6 +7,8 @@ let cors = require("cors");
 
 const routerPage = require('./routers/Pages');
 const routerSection = require('./routers/Sections');
+const routerHeaders = require('./routers/Headers');
+
 
 
 function run() {     
@@ -20,6 +22,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1/page" , routerPage);
 app.use("/api/v1/section" , routerSection);
+app.use("/api/v1/header" , routerHeaders);
+
 
 app.listen(8000,()=>{
     run();

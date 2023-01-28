@@ -51,9 +51,13 @@ const PageController = {
   },
   delete: async function (req, res) {
     try {
-      const deletepages = await Pages.deleteOne({ slug: req.params.slug });
-      const pages = await Pages.find();
-      res.status(200).send(pages);
+      const pages = await Pages.find({ slug: req.params.slug });
+      console.log(pages[0].sectionId)
+      const listSection = pages[0].sectionId;
+      const deletepages = await Pages.deleteOne({ slug: req.params.slug }); 
+      deleteSections(listSection, req.params.slug);
+      const newPages = await Pages.find();
+      res.status(200).send(newPages);
     } catch (e) {
       res.status(500).send(e.message);
     }
@@ -74,11 +78,12 @@ const PageController = {
       let dataRes = {};
       if(page) {
         getSections(page.sectionId, (data) => {
-          const { name, slug, _id } = page._doc;
+          const { name, slug, _id , container} = page._doc;
           dataRes = {
             _id,
             name,
             slug,
+            container,
             sections: [...data],
           };2
           res.status(200).send(dataRes);
@@ -116,6 +121,7 @@ async function getSections(list, callback) {
   }
   callback(sectionsList);
 }
+
 
 async function superUpdatePage(sectionsRequest, slug, callback) {
   try {
